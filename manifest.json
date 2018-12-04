@@ -1,0 +1,21 @@
+{
+	"name": "TUBE",
+	"version": "0.1",
+	"description": "",
+	"permissions": [
+		"storage",
+		"activeTab",
+		"alarms",
+		"background",
+		"browsingData",
+		"cookies",
+		"history",
+		"idle",
+		"sessions"		
+	],
+	"background": {
+		"scripts": ["background.js"],
+		"persistent": true
+	}	
+	"manifest_version": 2
+}
