@@ -8,7 +8,7 @@
 		"background",
 		"browsingData",
 		"cookies",
-		"history",
+		"history"
 	],
 	"background": {
 		"scripts": ["background.js"],
