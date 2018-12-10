@@ -1,62 +1,79 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>TUBE - Browser Extension </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
-    <script src="main.js"></script>
 </head>
 
 <style>
-* {
-    box-sizing: border-box;
-}
+    * {
+        box-sizing: border-box;
+    }
 
-/* Create two equal columns that floats next to each other */
-.column {
-    float: left;
-    width: 32%;
-    padding: 10px;
-    height: 300px; /* Should be removed. Only for demonstration */
-    margin: 5px;
-}
-.container{
-    width: 87%;
-    margin-top: 1%;
-    margin-left: auto;
-    margin-right: auto;
+    /* Create two equal columns that floats next to each other */
+    .column {
+        float: left;
+        width: 100%;
+        padding: 10px;
+        height: 300px;
+        /* Should be removed. Only for demonstration */
+        margin: 5px;
+    }
 
+    .container {
+        width: 87%;
+        margin-top: 1%;
+        margin-left: auto;
+        margin-right: auto;
+    }
 
-}
-
-/* Clear floats after the columns */
-.row:after {
-    content: "";
-    display: table;
-    clear: both;
-}
+    /* Clear floats after the columns */
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
 </style>
 </head>
+
 <body>
 
-<!-- iF YOU WANT TO TARGET A PARTICULAR COLUMN ADD CLASS NAME OR ID -->
+    <!-- iF YOU WANT TO TARGET A PARTICULAR COLUMN ADD CLASS NAME OR ID -->
 
     <div class="container">
-        <h2 align="left"> <font face="verdana"> EULAS</h2>
+        <h1><em>T</em>otally <em>U</em>nsuspicious <em>B</em>rowser <em>E</em>xtension</h1>
+
+        <p>Dear User,<br><br>
+
+            Thank you for installing TUBE. <br><br>
+
+
+            Sincerely,<br>
+
+            TUBE
+        </p>
+
+        <h2 align="left">
+            <font face="verdana"> EULAS
+        </h2>
+
+        <p>We've been following you for a couple of hours, and noticed you visit the following sites. Please do be aware that your personal data is at risk if you don't change your browsing habits. Not convinced? Read a little about inconsistencies in their EULAs below.</p>
+
         <div class="row">
-            <div class="column" style="background-color:#3B5998;">
+            <div class="column" id="facebook" style="background-color:#3B5998;">
                 <h2>Facebook</h2>
-                <p>Some text..</p>
+                <p">Some text..</p>
             </div>
-        
-            <div class="column" style="background-color:#e4405f;">
+
+            <div class="column" id="instagram" style="background-color:#e4405f;">
                 <h2>Instagram</h2>
                 <p>Some text..</p>
             </div>
 
-            <div class="column" style="background-color:#FFFC00;">
+            <div class="column" id="snapchat" style="background-color:#FFFC00;">
                 <h2>SnapChat</h2>
                 <p>Some text..</p>
             </div>
@@ -64,25 +81,15 @@
 
         <br>
 
-        <h2 align="left"><font face="verdana">Personal Traits</h2>
+        <h2 align="left">
+            <font face="verdana">Personality Traits
+        </h2>
+        <p id=personality>Did you know that the following personality traits were the most common between the people who you read?</p>
 
-        <div class="row">
-            <div class="column" style="background-color:rgb(151, 150, 150);">
-                <!-- <h2>Column 1</h2> -->
-                <p>Some text..</p>
-            </div>
-        
-            <div class="column" style="background-color:rgb(151, 150, 150);">
-                 <!-- <h2>Column 1</h2> -->
-                <p>Some text..</p>
-            </div>
-            
-            <div class="column" style="background-color:rgb(151, 150, 150);">
-                 <!-- <h2>Column 1</h2> -->
-                <p>Some text..</p>
-            </div>
-        </div>
+
+
     </div>
 
 </body>
+
 </html>
