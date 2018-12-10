@@ -52,7 +52,7 @@ chrome.runtime.onStartup.addListener(function () {
         })
       }
     }
-  } // placeholder. Put actual code into this function l8r
+  }
 
   chrome.storage.local.get(['init_time'], check_and_show_page(result));
 
@@ -60,25 +60,27 @@ chrome.runtime.onStartup.addListener(function () {
   /*
 
 
-   DIEDIED     DIEDIE  EDIEDIEDIED
-   EDIEDIEDI   EDIEDI  IEDIEDIEDIED
-   IEDIEDIEDI   EDIE   DIED    EDIE
-   DIED   IEDI   EDI    DIE
-    DIE   DIED  DIE     EDIEDI
-    EDI    DIE   DIE    IEDIEDI
-    IED   IEDI   ED     DIEDIED
-   EDIE  EDIED   IE     EDI
-  DIEDIEDIEDIE  EDIE    IEDI    DIE
-  EDIEDIEDIED  DIEDIE  EDIEDIE IEDI
-  IEDIEDIED    EDIEDIE IEDIEDIEDIED
+   DIEDIED     DIEDIE  EDIEDIEDIED      DIEDIED     DIEDIE  EDIEDIEDIED
+   EDIEDIEDI   EDIEDI  IEDIEDIEDIED     EDIEDIEDI   EDIEDI  IEDIEDIEDIED
+   IEDIEDIEDI   EDIE   DIED    EDIE     IEDIEDIEDI   EDIE   DIED    EDIE
+   DIED   IEDI   EDI    DIE             DIED   IEDI   EDI    DIE
+    DIE   DIED  DIE     EDIEDI           DIE   DIED  DIE     EDIEDI
+    EDI    DIE   DIE    IEDIEDI          EDI    DIE   DIE    IEDIEDI
+    IED   IEDI   ED     DIEDIED          IED   IEDI   ED     DIEDIED
+   EDIE  EDIED   IE     EDI              EDIE  EDIED   IE     EDI
+  DIEDIEDIEDIE  EDIE    IEDI    DIE    DIEDIEDIEDIE  EDIE    IEDI    DIE
+  EDIEDIEDIED  DIEDIE  EDIEDIE IEDI    EDIEDIEDIED  DIEDIE  EDIEDIE IEDI
+  IEDIEDIED    EDIEDIE IEDIEDIEDIED    IEDIEDIED    EDIEDIE IEDIEDIEDIED
 
+  // ...
+  // TODO: remove existential comments
 
   * */
-  // ...
-  //TODO: Die
+
 });
 
 chrome.runtime.onSuspend.addListener(function () {
+  // STRETCH GOALS:
   // TODO Save any data generated since last session
   // TODO Save session timer
 });
@@ -94,7 +96,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, Tab) {
         request.open("POST", "https://gateway-syd.watsonplatform.net/personality-insights/api",
           true, "sb5455+watson@nyu.edu", "CoolCoolEvan42069");
 
-        request.setRequestHeader("X-Watson-Learning-Opt-Out", true);
+        request.setRequestHeader("X-Watson-Learning-Opt-Out", true); // wouldn't be much of a privacy art-piece if we left this true
         request.setRequestHeader("Content-Type", "application/json;charset=utf-8");
 
         request.onreadystatechanged = function () {
