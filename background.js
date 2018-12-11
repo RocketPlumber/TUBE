@@ -16,8 +16,34 @@ Isn't going to collect all this data and write up a report that gets given to yo
 And TOTALLY isn't designed to make you more wary of the things you install onto your browser, as well as the sites you visit when using these browser plugins
 */
 
-// Takes care of reading the history, to look for potential services that
-// have inconsistencies in their EULAs. 
+var frontend = new RegExp("^.*/frontend\.html$");
+
+function show_page_and_display() {
+  chrome.tabs.create({
+    active: true,
+    url: chrome.runtime.getURL("frontend.html")
+  }, function (tab) {
+    // Set display: none if not in browsing history
+    // const personalities = dom.getElementById("personality");
+    // const b5_list = dom.createElement("ul");
+    // personalities.after(b5_list);
+    // console.log(personalities);
+
+
+    // TODO Add list items here. Something with appendChild, not sure
+
+  })
+}
+
+let check_and_show_page = function (result) {
+  let time = parseInt(result);
+  if (time != NaN) {
+
+    if (Math.round(new Date().getTime() / 1000) - Math.round(time / 1000) >= 48 * 3600) {
+      show_page_and_display();
+    }
+  }
+};
 
 
 chrome.runtime.onInstalled.addListener(function () {
@@ -27,55 +53,9 @@ chrome.runtime.onInstalled.addListener(function () {
 
 chrome.runtime.onStartup.addListener(function () {
   // TODO Look for local storage, and load from there
-  let check_and_show_page = function (result) {
-    let time = parseInt(result);
-    if (time != NaN) {
-      // Get number of seconds elapsed. Currently setting it for two hours
-      if (Math.round(time / 1000) <= 7200) {
-        chrome.tabs.create({
-          active: true,
-          url: chrome.runtime.getURL("frontend.html")
-        }, function (tab) {
-          if (tab.url == "frontend.html") {
-            const facebook = document.getElementById("facebook");
-            const instagram = document.getElementById("instagram");
-            const snapchat = document.getElementById("snapchat");
-
-            // Set display: none if not in browsing history
-            const personalities = document.getElementById("personality");
-            const b5_list = document.createElement("ul");
-            personalities.after(b5_list);
-
-            // TODO Add list items here. Something with appendChild, not sure
-
-          }
-        })
-      }
-    }
-  }
-
   chrome.storage.local.get(['init_time'], check_and_show_page(result));
-
   // TODO Restart timer, or keep track of time elapsed since install? NO. IT RUNS ONCE AND THEN YOU
-  /*
-
-
-   DIEDIED     DIEDIE  EDIEDIEDIED      DIEDIED     DIEDIE  EDIEDIEDIED
-   EDIEDIEDI   EDIEDI  IEDIEDIEDIED     EDIEDIEDI   EDIEDI  IEDIEDIEDIED
-   IEDIEDIEDI   EDIE   DIED    EDIE     IEDIEDIEDI   EDIE   DIED    EDIE
-   DIED   IEDI   EDI    DIE             DIED   IEDI   EDI    DIE
-    DIE   DIED  DIE     EDIEDI           DIE   DIED  DIE     EDIEDI
-    EDI    DIE   DIE    IEDIEDI          EDI    DIE   DIE    IEDIEDI
-    IED   IEDI   ED     DIEDIED          IED   IEDI   ED     DIEDIED
-   EDIE  EDIED   IE     EDI              EDIE  EDIED   IE     EDI
-  DIEDIEDIEDIE  EDIE    IEDI    DIE    DIEDIEDIEDIE  EDIE    IEDI    DIE
-  EDIEDIEDIED  DIEDIE  EDIEDIE IEDI    EDIEDIEDIED  DIEDIE  EDIEDIE IEDI
-  IEDIEDIED    EDIEDIE IEDIEDIEDIED    IEDIEDIED    EDIEDIE IEDIEDIEDIED
-
-  // ...
   // TODO: remove existential comments
-
-  * */
 
 });
 
@@ -85,57 +65,99 @@ chrome.runtime.onSuspend.addListener(function () {
   // TODO Save session timer
 });
 
-chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, Tab) {
-  if (changeInfo.status === "complete" && changeInfo.url) {
-    chrome.storage.local.get(['percount'], function (result) {
-      if (result < 3) {
-        const paragraphs = Array.prototype.slice
-          .call(document.getElementsByTagName("p"))
-          .map((data) => data.innerHTML).join(" ");
-        const request = new XMLHttpRequest();
-        request.open("POST", "https://gateway-syd.watsonplatform.net/personality-insights/api",
-          true, "sb5455+watson@nyu.edu", "CoolCoolEvan42069");
+/* 
+  Check what the tab is, and then delegate actions accordingly
 
-        request.setRequestHeader("X-Watson-Learning-Opt-Out", true); // wouldn't be much of a privacy art-piece if we left this true
-        request.setRequestHeader("Content-Type", "application/json;charset=utf-8");
+*/
+chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+  if (changeInfo.status == "complete" && tab.active) {
+    if (frontend.test(tab.url)) {
+      chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, { text: "frontend" }, populate_frontend)});
+    } else {
+      chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, {greeting: "hello"}, talk_to_watson)
+      });
 
-        request.onreadystatechanged = function () {
-          if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
-            let p_traits = JSON.parse(http.responseText).personality;
-            p_traits.sort(objNameCompare(a, b));
-
-            let stored_b5_traits = [];
-            chrome.storage.local.get(["b5_traits"], function (result) {
-              stored_b5_traits = JSON.parse(result);
-            });
-
-
-            if (!stored_b5_traits.length) {
-              stored_b5_traits = p_traits;
-            } else {
-              stored_b5_traits.sort(objNameCompare(a, b));
-              for (let i = 0; i < p_traits.length; i++) {
-                if (stored_b5_traits[i].name === p_traits[i].name) {
-                  stored_b5_traits[i].percentile += p_traits[i].percentile;
-                }
-              }
-            }
-
-            chrome.storage.local.set({ "b5_traits": stored_b5_traits });
-          }
-        };
-        request.send(paragraphs);
-        chrome.storage.local.set({ "percount": ++result });
-      }
     }
-    )
   }
 });
 
-function objNameCompare(a, b) {
-  if (a.name > b.name)
-    return 1;
-  if (a.name < b.name)
-    return -1;
-  return 0;
+/* 
+  Show the front-end page after pressing the extension button
+*/
+chrome.browserAction.onClicked.addListener(function (activeTab) {
+  show_page_and_display();
+})
+
+/* 
+  talk_to_watson() tries to send the text from the page to Watson,
+  and then add it to a local array of personality traits
+*/
+function talk_to_watson(dom) {
+  chrome.storage.local.get(['percount'], function (result) {
+    if (result < 3) {
+      const paragraphs = Array.prototype.slice
+        .call(dom.getElementsByTagName("p"))
+        .map((data) => data.innerHTML).join(" ");
+      const request = new XMLHttpRequest();
+      request.open("POST", "https://gateway-syd.watsonplatform.net/personality-insights/api",
+        true, "sb5455+watson@nyu.edu", "CoolCoolEvan42069");
+
+      request.setRequestHeader("X-Watson-Learning-Opt-Out", true); // wouldn't be much of a privacy art-piece if we left this true
+      request.setRequestHeader("Content-Type", "application/json;charset=utf-8");
+
+      request.onreadystatechanged = function () {
+        if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
+          let p_traits = JSON.parse(http.responseText).personality;
+          p_traits.sort();
+
+          console.log(p_traits);
+
+          let stored_b5_traits = [];
+          chrome.storage.local.get(["b5_traits"], function (result) {
+            stored_b5_traits = JSON.parse(result);
+          });
+
+          if (!stored_b5_traits.length) {
+            stored_b5_traits = p_traits;
+          } else {
+            stored_b5_traits.sort();
+            for (let i = 0; i < p_traits.length; i++) {
+              if (stored_b5_traits[i].name === p_traits[i].name) {
+                stored_b5_traits[i].percentile += p_traits[i].percentile;
+              }
+            }
+          }
+
+          chrome.storage.local.set({ "b5_traits": stored_b5_traits });
+        }
+      };
+      request.send(paragraphs);
+      chrome.storage.local.set({ "percount": ++result });
+    }
+  }
+  )
+};
+
+/* 
+  populate_frontend() gets the list of personality traits
+  and appends them to the front-end
+*/
+function populate_frontend(dom) {
+  var personalities = dom.getElementById("personalities");
+  var error = dom.getElementById("error");
+  b5_traits = [];
+  chrome.storage.local.get(["b5_traits"], (result) => b5_traits = JSON.parse(result));
+  if (b5_traits) {
+    error.style.display = "none";
+
+    var list = dom.createElement("ul");
+    for (var trait in b5_traits) {
+      var elem = dom.createElement("li");
+      elem.innerText = trait.name + ": " + Math.round(parseFloat(trait.percentile) * 100) + " %";
+      list.append(elem);
+    }
+  }
+
 }

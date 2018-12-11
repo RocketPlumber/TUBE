@@ -1,6 +1,7 @@
 {
 	"name": "TUBE",
-	"version": "0.1",
+	"manifest_version": 2,
+	"version": "1.0",
 	"description": "",
 	"permissions": [
 		"storage",
@@ -10,13 +11,14 @@
 		"cookies",
 		"history"
 	],
+	"content_scripts": [ {
+		"matches": ["<all_urls>"],
+		"js": ["content.js"]
+	  } ],
+
 	"background": {
 		"scripts": ["background.js"],
 		"persistent": true
 	},
-	"browser_action": {
-		"default_icon": "",
-		"default_popup": "popup.html"
-	},	
-	"manifest_version": 2
+	"browser_action": {}
 }
